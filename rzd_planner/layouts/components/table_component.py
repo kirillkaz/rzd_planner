@@ -19,6 +19,7 @@ def render_table(
     table_id: str,
     columns_def: list[TableColumn],
     class_name: str = "default-table-block",
+    row_selectable: str | None = "multi",
 ) -> html.Div:
     """Функция для отрисовки таблицы"""
     return html.Div(
@@ -30,7 +31,7 @@ def render_table(
             sort_action="native",
             sort_mode="multi",
             filter_action="native",
-            row_selectable="multi",
+            row_selectable=row_selectable,
         ),
         className=class_name,
     )
