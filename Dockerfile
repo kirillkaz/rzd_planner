@@ -1,7 +1,5 @@
 FROM python:3.12-slim
 
-WORKDIR "/usr/src/"
-
 ENV  PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONHASHSEED=random \
@@ -18,4 +16,4 @@ RUN python3.12 -m pip install --upgrade pip && \
 
 COPY . .
 
-ENTRYPOINT ["gunicorn", "-b 0.0.0.0:8050", "rzd_planner.main:srv"]
+CMD ["gunicorn", "--reload", "-b 0.0.0.0:8050", "rzd_planner.main:srv"]
