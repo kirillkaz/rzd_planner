@@ -45,7 +45,6 @@ def auth_callback(_: int, username: str, password: str) -> AuthCallbackReturn:
             if user_role == str(UserRoles.EXPERT):
                 return AuthCallbackReturn(url="/train_type")
             else:
-                # TODO: поправить на user
-                return AuthCallbackReturn(url="/success")
+                return AuthCallbackReturn(url="/trains")
 
     return AuthCallbackReturn(url=no_update)
