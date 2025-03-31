@@ -1,0 +1,4 @@
+from .check_knowledge_page import render_check_knowledge_page
+from .routes_page import render_routes_page
+from .stations_page import render_stations_page
+from .train_types_page import render_train_types_page
