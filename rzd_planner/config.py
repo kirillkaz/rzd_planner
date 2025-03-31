@@ -1,5 +1,11 @@
 import os
 from dataclasses import dataclass
+from enum import StrEnum
+
+
+class UserRoles(StrEnum):
+    EXPERT: str = "expert"
+    USER: str = "user"
 
 
 @dataclass
