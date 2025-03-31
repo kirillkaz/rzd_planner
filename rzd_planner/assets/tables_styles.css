@@ -1,0 +1,36 @@
+.table-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.table-header-right{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.table-header-title {
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.table-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 80%;
+    margin: 40px auto 0px auto;
+}
+
+.default-table-block tr > * {
+    background-color: white !important;
+    padding: 10px !important;
+    text-align: left !important;
+}
+
+.default-table-block tr:first-child > * {
+    font-weight: bolder !important;
+    font-size: 18px;
+}
