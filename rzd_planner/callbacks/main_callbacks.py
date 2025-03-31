@@ -69,8 +69,7 @@ def display_page(pathname: str) -> tuple[html.Div, str]:
             user_role = UserDAO().get_role_by_username(current_user.get_id())
         if endpoint.path in expert_pages.keys() and user_role == str(UserRoles.EXPERT):
             view = expert_pages[endpoint.path]()
-
-        elif endpoint.path in expert_pages.keys() and user_role == str(UserRoles.USER):
+        elif endpoint.path in user_pages.keys() and user_role == str(UserRoles.USER):
             view = user_pages[endpoint.path]()
         else:
             view = "404"
