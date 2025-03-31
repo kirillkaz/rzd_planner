@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime
 from enum import StrEnum
 
+from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from passlib.context import CryptContext
 from sqlalchemy import CheckConstraint, ForeignKey, String, UniqueConstraint
@@ -41,6 +42,18 @@ db = SQLAlchemy(
 _pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
+class FlaskMigrateUser(UserMixin):
+    """модель пользователя"""
+
+    def __init__(self, username: str) -> None:
+        """конструктор модели пользователя
+
+        Args:
+            username (str): имя пользователя
+        """
+        self.id = username
+
+
 class User(db.Model):
     """Модель пользователя"""
 
@@ -49,6 +62,7 @@ class User(db.Model):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid1)
     username: Mapped[str] = mapped_column(String(30), unique=True)
     password_hash: Mapped[str] = mapped_column()
+    role: Mapped[str] = mapped_column(nullable=False)
 
     @property
     def password(self):
