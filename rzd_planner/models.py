@@ -136,7 +136,7 @@ class TrainTravelTimes(db.Model):
 
     __tablename__ = "train_travel_times"
 
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid1)
     start_date: Mapped[datetime] = mapped_column(nullable=False)
     end_date: Mapped[datetime] = mapped_column(nullable=False)
 
@@ -169,7 +169,7 @@ class TrainRoutes(db.Model):
 
     __tablename__ = "train_routes"
 
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid1)
     distance: Mapped[float] = mapped_column(nullable=False)
 
     start_station_id: Mapped[uuid.UUID] = mapped_column(
@@ -217,7 +217,7 @@ class Stations(db.Model):
 
     __tablename__ = "stations"
 
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid1)
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
 
     routes_as_start: Mapped[list["TrainRoutes"]] = relationship(
