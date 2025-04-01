@@ -1,0 +1,49 @@
+.modal-dialog{
+    --bs-modal-width: 900px;
+}
+
+.train-type-modal-body-inner{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.train-type-modal-body{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#train-type-input-id{
+    width: 400px;
+}
+
+.modal-train-type-speed-block,
+.modal-train-type-distance-block{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.modal-train-type-speed-block div,
+.modal-train-type-distance-block div{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.train-type-save-btn-block{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#train-type-start-speed-id,
+#train-type-end-speed-id,
+#train-type-start-distance-id,
+#train-type-end-distance-id{
+    width: 100px;
+}
+
+#train-type-save-btn-id{
+    width: 300px;
+}
