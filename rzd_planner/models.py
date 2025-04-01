@@ -102,11 +102,11 @@ class TrainTypes(db.Model):
             name="max_speed_range_constraint",
         ),
         CheckConstraint(
-            "min_speed > 0.0",
+            "min_distance > 0.0",
             name="min_distance_range_constraint",
         ),
         CheckConstraint(
-            "max_speed > min_distance",
+            "max_distance > min_distance",
             name="max_distance_range_constraint",
         ),
     )

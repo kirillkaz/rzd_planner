@@ -34,9 +34,9 @@ def upgrade() -> None:
     sa.Column('max_speed', sa.Float(), nullable=False),
     sa.Column('min_distance', sa.Float(), nullable=False),
     sa.Column('max_distance', sa.Float(), nullable=False),
-    sa.CheckConstraint('max_speed > min_distance', name='max_distance_range_constraint'),
+    sa.CheckConstraint('max_distance > min_distance', name='max_distance_range_constraint'),
     sa.CheckConstraint('max_speed > min_speed', name='max_speed_range_constraint'),
-    sa.CheckConstraint('min_speed > 0.0', name='min_distance_range_constraint'),
+    sa.CheckConstraint('min_distance > 0.0', name='min_distance_range_constraint'),
     sa.CheckConstraint('min_speed > 0.0', name='min_speed_range_constraint'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
