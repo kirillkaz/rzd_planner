@@ -28,7 +28,7 @@ def open_modal_callback(_: int) -> bool:
 @app.callback(
     output=dict(
         modal_is_open=Output("train-type-modal-id", "is_open"),
-        upload_trigger=Output("table-upload-trigger", "data"),
+        upload_trigger=Output("table-type-table-upload-trigger", "data"),
     ),
     inputs=dict(
         _=Input("train-type-save-btn-id", "n_clicks"),
@@ -75,7 +75,7 @@ def save_train_type_callback(
 
 @app.callback(
     Output("train-types-table-id", "data"),
-    Input("table-upload-trigger", "data"),
+    Input("table-type-table-upload-trigger", "data"),
 )
 def load_data_to_table_callback(_: int) -> list[TrainTypeTable]:
     """Колбэк для загрузки данных в таблицу"""

@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash_extensions.enrich import html, dcc
+from dash_extensions.enrich import dcc, html
 
 from rzd_planner.layouts.components.header import render_expert_header
 from rzd_planner.layouts.components.table_component import render_table
@@ -132,6 +132,7 @@ def render_train_types_page() -> html.Div:
                                 children="Удалить типы поездов",
                                 color="secondary",
                                 id="train-types-delete-btn-id",
+                                disabled=True,
                             ),
                         ],
                     ),
@@ -141,6 +142,6 @@ def render_train_types_page() -> html.Div:
                 ],
                 className="table-block",
             ),
-            dcc.Store(id="table-upload-trigger", storage_type="memory")
+            dcc.Store(id="table-type-table-upload-trigger", storage_type="memory"),
         ],
     )
