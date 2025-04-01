@@ -1,0 +1,19 @@
+.stations-modal-body{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#stations-name-id{
+    width: 400px;
+}
+
+.stations-save-btn-block{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#stations-save-btn-id{
+    width: 300px;
+}
