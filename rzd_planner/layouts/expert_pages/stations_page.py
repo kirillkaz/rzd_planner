@@ -36,7 +36,7 @@ def _render_modal() -> dbc.Modal:
             ),
         ],
         id="stations-modal-id",
-        is_open=True,
+        is_open=False,
         centered=True,
     )
 
