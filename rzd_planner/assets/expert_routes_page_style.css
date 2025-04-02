@@ -1,0 +1,27 @@
+.expert-routes-modal-body-inner{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.expert-routes-modal-body{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.expert-routes-save-btn-block{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#expert-routes-start-station-id,
+#expert-routes-end-station-id,
+#expert-routes-distance-id{
+    width: 400px;
+}
+
+#expert-routes-save-btn-id{
+    width: 300px;
+}
