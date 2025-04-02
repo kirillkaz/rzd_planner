@@ -1,0 +1,52 @@
+from dataclasses import asdict, dataclass
+from typing import Self
+
+from sqlalchemy.orm import joinedload
+
+from rzd_planner.models import TrainRoutes, db
+
+
+@dataclass
+class ExpertRouteDTO:
+    """DTO маршрутов поездов"""
+
+    distance: float
+    start_station_id: str
+    end_station_id: str
+
+
+class ExpertRoutesDAO:
+    """DAO маршрутов поездов"""
+
+    def save(self: Self, dto: ExpertRouteDTO) -> None:
+        """Метод для сохранения маршрута поезда
+
+        Args:
+            dto (ExpertRouteDTO): DTO маршрута поезда
+        """
+        with db.session() as session:
+            obj = TrainRoutes(**asdict(dto))
+            session.add(obj)
+            session.commit()
+
+    def get_all(self: Self) -> list[TrainRoutes]:
+        """Метод для извлечения всех маршрутов поездов из БД
+
+        Returns:
+            list[Stations]: маршруты поездов
+        """
+        with db.session() as session:
+            models = (
+                session.query(TrainRoutes)
+                .options(
+                    joinedload(
+                        TrainRoutes.start_station,
+                    ),
+                    joinedload(
+                        TrainRoutes.end_station,
+                    ),
+                )
+                .all()
+            )
+
+        return models
