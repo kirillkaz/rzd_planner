@@ -12,6 +12,13 @@ class StationsTableType(TypedDict):
     station: str
 
 
+class StationsOption(TypedDict):
+    """Струкрута опции в dbc.Select"""
+
+    label: str
+    value: str
+
+
 class StationsMapper:
     """Класс для преобразования моделей станций в строки таблицы"""
 
@@ -31,5 +38,24 @@ class StationsMapper:
                 "station": obj.name,
             }
             result_arr.append(cast(StationsTableType, elem))
+
+        return result_arr
+
+    def model_to_options(self: Self, objects: list[Stations]) -> list[StationsOption]:
+        """Метод для преобразования моделей станций в опции dbc.Select
+
+        Args:
+            objects (list[Stations]): Список моделей
+
+        Returns:
+            list[StationsOption]: Список опций
+        """
+        result_arr = []
+        for obj in objects:
+            elem = {
+                "value": str(obj.id),
+                "label": obj.name,
+            }
+            result_arr.append(cast(StationsOption, elem))
 
         return result_arr
