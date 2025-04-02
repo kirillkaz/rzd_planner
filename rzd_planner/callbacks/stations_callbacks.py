@@ -17,7 +17,7 @@ class SaveStationReturn(TypedDict):
 
 @app.callback(
     Output("stations-modal-id", "is_open"),
-    Input("stationss-add-btn-id", "n_clicks"),
+    Input("stations-add-btn-id", "n_clicks"),
     prevent_initial_call=True,
 )
 def open_modal_stations_callback(_: int) -> bool:
