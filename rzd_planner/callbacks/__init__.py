@@ -3,5 +3,6 @@ from . import (
     expert_routes_callbacks,
     main_callbacks,
     stations_callbacks,
+    train_callbacks,
     train_types_callbacks,
 )
