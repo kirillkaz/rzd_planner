@@ -14,6 +14,13 @@ class TrainTypeTable(TypedDict):
     travel_distance: str
 
 
+class TrainTypeOption(TypedDict):
+    """Струкрута опции в dbc.Select"""
+
+    label: str
+    value: str
+
+
 class TrainTypeMapper:
     """Класс для преобразования моделей типов поездов в строки таблицы"""
 
@@ -35,5 +42,26 @@ class TrainTypeMapper:
                 "travel_distance": f"от {obj.min_distance} км до {obj.max_distance} км",
             }
             result_arr.append(cast(TrainTypeTable, elem))
+
+        return result_arr
+
+    def model_to_options(
+        self: Self, objects: list[TrainTypes]
+    ) -> list[TrainTypeOption]:
+        """Метод для преобразования моделей типов поездов в опции dbc.Select
+
+        Args:
+            objects (list[TrainTypes]): Список моделей
+
+        Returns:
+            list[TrainTypeOption]: Список опций
+        """
+        result_arr = []
+        for obj in objects:
+            elem = {
+                "value": str(obj.id),
+                "label": obj.name,
+            }
+            result_arr.append(cast(TrainTypeOption, elem))
 
         return result_arr
