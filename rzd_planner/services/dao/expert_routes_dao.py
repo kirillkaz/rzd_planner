@@ -50,3 +50,15 @@ class ExpertRoutesDAO:
             )
 
         return models
+
+    def delete(self: Self, uuid_lst: list[str]) -> None:
+        """Метод для удаления маршрутов поездов
+
+        Args:
+            uuid_lst (list[str]): список uuid записей
+        """
+        with db.session() as session:
+            session.query(TrainRoutes).filter(TrainRoutes.id.in_(uuid_lst)).delete(
+                synchronize_session=False
+            )
+            session.commit()

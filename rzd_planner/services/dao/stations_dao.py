@@ -35,3 +35,15 @@ class StationsDAO:
             models = session.query(Stations).all()
 
         return models
+
+    def delete(self: Self, uuid_lst: list[str]) -> None:
+        """Метод для удаления станций
+
+        Args:
+            uuid_lst (list[str]): список uuid записей
+        """
+        with db.session() as session:
+            session.query(Stations).filter(Stations.id.in_(uuid_lst)).delete(
+                synchronize_session=False
+            )
+            session.commit()

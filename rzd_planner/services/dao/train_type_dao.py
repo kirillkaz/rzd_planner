@@ -39,3 +39,13 @@ class TrainTypeDAO:
             models = session.query(TrainTypes).all()
 
         return models
+
+    def delete(self: Self, uuid_lst: list[str]) -> None:
+        """Метод для удаления типов поездов
+
+        Args:
+            uuid_lst (list[str]): список uuid записей
+        """
+        with db.session() as session:
+            session.query(TrainTypes).filter(TrainTypes.id.in_(uuid_lst)).delete(synchronize_session=False)
+            session.commit()
