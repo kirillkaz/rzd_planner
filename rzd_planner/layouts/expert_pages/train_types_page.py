@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash_extensions.enrich import dcc, html
 
+from rzd_planner.layouts.components.del_modal_component import render_delete_modal
 from rzd_planner.layouts.components.header import render_expert_header
 from rzd_planner.layouts.components.table_component import render_table
 from rzd_planner.layouts.components.table_header import render_table_header
@@ -111,6 +112,11 @@ def render_train_types_page() -> html.Div:
 
     return html.Div(
         children=[
+            render_delete_modal(
+                "Удаление типов поездов",
+                "train-types-delete-confirm-btn-id",
+                "train-types-delete-modal-id",
+            ),
             _render_modal(),
             render_expert_header(),
             html.Div(
@@ -132,7 +138,6 @@ def render_train_types_page() -> html.Div:
                                 children="Удалить типы поездов",
                                 color="secondary",
                                 id="train-types-delete-btn-id",
-                                disabled=True,
                             ),
                         ],
                     ),
