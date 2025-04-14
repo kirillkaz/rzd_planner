@@ -24,6 +24,14 @@ class SaveExpertRouteReturn(TypedDict):
     upload_trigger: str
 
 
+class DelExpertRoutesReturn(TypedDict):
+    """Структура возвращаемого типа для колбэка del_expert_routes_callback"""
+
+    trigger: str
+    selected_rows: list[int]
+    is_open: bool
+
+
 @app.callback(
     Output("expert-routes-start-station-id", "options"),
     Output("expert-routes-end-station-id", "options"),
@@ -81,9 +89,6 @@ def save_exp_route_callback(
     Returns:
         SaveExpertRouteReturn: Структура возвращаемого типа для колбэка
     """
-    print(start_station_id)
-    print(end_station_id)
-    print(distance)
     dto = ExpertRouteDTO(
         start_station_id=start_station_id,
         end_station_id=end_station_id,
@@ -111,3 +116,55 @@ def load_exp_route_to_table(_: int) -> list[TrainRoutesTableType]:
     db_data = ExpertRoutesDAO().get_all()
     mapped_data = TrainRoutesMapper().model_to_table(db_data)
     return mapped_data
+
+
+@app.callback(
+    Output("expert-routes-delete-modal-id", "is_open"),
+    Input("routes-expert-delete-btn-id", "n_clicks"),
+    prevent_initial_call=True,
+)
+def open_expert_routes_del_modal(_: int) -> bool:
+    """Колбэк для открытия модального окна удаления маршрутов"""
+    return True
+
+
+@app.callback(
+    output=dict(
+        trigger=Output("exp-routes-table-upload-trigger", "data"),
+        selected_rows=Output("routes-expert-table-id", "selected_rows"),
+        is_open=Output("expert-routes-delete-modal-id", "is_open"),
+    ),
+    inputs=dict(
+        _=Input("expert-routes-delete-confirm-btn-id", "n_clicks"),
+        table_data=State("routes-expert-table-id", "derived_virtual_data"),
+        selected_indices=State(
+            "routes-expert-table-id", "derived_virtual_selected_rows"
+        ),
+    ),
+    prevent_initial_call=True,
+)
+def del_expert_routes_callback(
+    _: int,
+    table_data: list[TrainRoutesTableType],
+    selected_indices: list[int],
+) -> DelExpertRoutesReturn:
+    """Колбэк для удаления маршрутов
+
+    Args:
+        table_data (list[TrainRoutesTableType]): данные таблицы
+        selected_indices (list[int]): индексы выделенных строк
+
+    Returns:
+        DelExpertRoutesReturn: возвращаемая структура колбэка
+    """
+    bad_uuids = []
+    for index, elem in enumerate(table_data):
+        if index in selected_indices:
+            bad_uuids.append(elem["id"])
+
+    ExpertRoutesDAO().delete(bad_uuids)
+    return DelExpertRoutesReturn(
+        trigger="trigger",
+        selected_rows=[],
+        is_open=False,
+    )

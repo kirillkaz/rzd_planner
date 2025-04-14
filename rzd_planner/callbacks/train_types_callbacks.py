@@ -15,6 +15,14 @@ class SaveTrainTypeReturn(TypedDict):
     upload_trigger: str
 
 
+class DelTrainTypeReturn(TypedDict):
+    """Структура возвращаемого типа для колбэка del_train_types_callback"""
+
+    trigger: str
+    selected_rows: list[int]
+    is_open: bool
+
+
 @app.callback(
     Output("train-type-modal-id", "is_open"),
     Input("train-types-add-btn-id", "n_clicks"),
@@ -48,11 +56,6 @@ def save_train_type_callback(
     start_distance: float,
     end_distance: float,
 ) -> SaveTrainTypeReturn:
-    print(train_type)
-    print(start_speed)
-    print(end_speed)
-    print(start_distance)
-    print(end_distance)
     dto = TrainTypeDTO(
         name=train_type,
         min_speed=start_speed,
@@ -82,3 +85,53 @@ def load_data_to_table_callback(_: int) -> list[TrainTypeTable]:
     db_data = TrainTypeDAO().get_all()
     mapped_data = TrainTypeMapper().model_to_table(db_data)
     return mapped_data
+
+
+@app.callback(
+    Output("train-types-delete-modal-id", "is_open"),
+    Input("train-types-delete-btn-id", "n_clicks"),
+    prevent_initial_call=True,
+)
+def open_train_types_del_modal(_: int) -> bool:
+    """Колбэк для открытия модального окна удаления типов поездов"""
+    return True
+
+
+@app.callback(
+    output=dict(
+        trigger=Output("table-type-table-upload-trigger", "data"),
+        selected_rows=Output("train-types-table-id", "selected_rows"),
+        is_open=Output("train-types-delete-modal-id", "is_open"),
+    ),
+    inputs=dict(
+        _=Input("train-types-delete-confirm-btn-id", "n_clicks"),
+        table_data=State("train-types-table-id", "derived_virtual_data"),
+        selected_indices=State("train-types-table-id", "derived_virtual_selected_rows"),
+    ),
+    prevent_initial_call=True,
+)
+def del_train_types_callback(
+    _: int,
+    table_data: list[TrainTypeTable],
+    selected_indices: list[int],
+) -> DelTrainTypeReturn:
+    """Колбэк для удаления типов поездов
+
+    Args:
+        table_data (list[TrainTypeTable]): данные таблицы
+        selected_indices (list[int]): индексы выделенных строк
+
+    Returns:
+        DelTrainTypeReturn: возвращаемая структура колбэка
+    """
+    bad_uuids = []
+    for index, elem in enumerate(table_data):
+        if index in selected_indices:
+            bad_uuids.append(elem["id"])
+
+    TrainTypeDAO().delete(bad_uuids)
+    return DelTrainTypeReturn(
+        trigger="trigger",
+        selected_rows=[],
+        is_open=False,
+    )

@@ -15,6 +15,14 @@ class SaveStationReturn(TypedDict):
     upload_trigger: str
 
 
+class DelStationsReturn(TypedDict):
+    """Структура возвращаемого типа для колбэка del_stations_callback"""
+
+    trigger: str
+    selected_rows: list[int]
+    is_open: bool
+
+
 @app.callback(
     Output("stations-modal-id", "is_open"),
     Input("stations-add-btn-id", "n_clicks"),
@@ -74,3 +82,53 @@ def load_data_to_table_callback(_: int) -> list[StationsTableType]:
     db_data = StationsDAO().get_all()
     mapped_data = StationsMapper().model_to_table(db_data)
     return mapped_data
+
+
+@app.callback(
+    Output("stations-delete-modal-id", "is_open"),
+    Input("stations-delete-btn-id", "n_clicks"),
+    prevent_initial_call=True,
+)
+def open_stations_del_modal(_: int) -> bool:
+    """Колбэк для открытия модального окна удаления станций"""
+    return True
+
+
+@app.callback(
+    output=dict(
+        trigger=Output("stations-table-upload-trigger", "data"),
+        selected_rows=Output("stations-table-id", "selected_rows"),
+        is_open=Output("stations-delete-modal-id", "is_open"),
+    ),
+    inputs=dict(
+        _=Input("stations-delete-confirm-btn-id", "n_clicks"),
+        table_data=State("stations-table-id", "derived_virtual_data"),
+        selected_indices=State("stations-table-id", "derived_virtual_selected_rows"),
+    ),
+    prevent_initial_call=True,
+)
+def del_stations_callback(
+    _: int,
+    table_data: list[StationsTableType],
+    selected_indices: list[int],
+) -> DelStationsReturn:
+    """Колбэк для удаления станций
+
+    Args:
+        table_data (list[StationsTableType]): данные таблицы
+        selected_indices (list[int]): индексы выделенных строк
+
+    Returns:
+        DelStationsReturn: возвращаемая структура колбэка
+    """
+    bad_uuids = []
+    for index, elem in enumerate(table_data):
+        if index in selected_indices:
+            bad_uuids.append(elem["id"])
+
+    StationsDAO().delete(bad_uuids)
+    return DelStationsReturn(
+        trigger="trigger",
+        selected_rows=[],
+        is_open=False,
+    )
