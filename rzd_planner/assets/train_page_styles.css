@@ -1,0 +1,22 @@
+#train-input-id,
+#train-type-select-id{
+    width: 400px;
+}
+
+.train-modal-body{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.train-modal-body-inner{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.train-save-btn-block{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
