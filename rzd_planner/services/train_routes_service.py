@@ -22,11 +22,9 @@ class TrainRoutesService:
                         all_routes.append(" -> ".join(path))
         return all_routes
 
-    def get_train_routes(self: Self) -> list[str]:
+    def get_train_routes(self: Self, all_routes: list[TrainRoutes]) -> list[str]:
         """Метод для получения всех маршрутов поездов"""
         Graph = nx.DiGraph()
-
-        all_routes: list[TrainRoutes] = ExpertRoutesDAO().get_all()
 
         routes = []
 
