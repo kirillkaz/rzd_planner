@@ -102,7 +102,6 @@ def save_train_callback(
 )
 def load_exp_route_to_table(_: int) -> list[TrainsTableType]:
     """Колбэк для загрузки данных в таблицу"""
-    print(TrainRoutesService().get_train_routes())
 
     db_data = TrainDAO().get_all()
     mapped_data = TrainsMapper().model_to_table(db_data)
