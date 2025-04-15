@@ -228,3 +228,12 @@ class Stations(db.Model):
         back_populates="end_station",
         foreign_keys="[TrainRoutes.end_station_id]",
     )
+
+
+class FullRoutes(db.Model):
+    """Модель полных маршрутов следования"""
+
+    __tablename__ = "full_routes"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid1)
+    route: Mapped[str] = mapped_column(unique=True, nullable=False)
