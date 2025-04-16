@@ -4,6 +4,7 @@ from . import (
     main_callbacks,
     stations_callbacks,
     train_callbacks,
+    train_travel_times_callbacks,
     train_types_callbacks,
     user_routes_callbacks,
 )
