@@ -43,9 +43,7 @@ class FullRoutesMapper:
 
         return result_arr
 
-    def str_to_options(
-        self: Self, objects: list[str]
-    ) -> list[FullRouteOption]:
+    def str_to_options(self: Self, objects: list[str]) -> list[FullRouteOption]:
         """Метод для преобразования строк полных маршрутов в опции dbc.Select
 
         Args:
@@ -59,6 +57,27 @@ class FullRoutesMapper:
             elem = {
                 "value": obj,
                 "label": obj,
+            }
+            result_arr.append(cast(FullRouteOption, elem))
+
+        return result_arr
+
+    def model_to_options(
+        self: Self, objects: list[FullRoutes]
+    ) -> list[FullRouteOption]:
+        """Метод для преобразования моделей в опции dbc.Select
+
+        Args:
+            objects (list[FullRoutes]): Список моделей
+
+        Returns:
+            list[FullRouteOption]: Список опций
+        """
+        result_arr = []
+        for obj in objects:
+            elem = {
+                "value": str(obj.id),
+                "label": obj.route,
             }
             result_arr.append(cast(FullRouteOption, elem))
 
