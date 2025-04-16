@@ -38,7 +38,7 @@ class DelExpertRoutesReturn(TypedDict):
     Input("routes-expert-add-btn-id", "n_clicks"),
     prevent_initial_call=True,
 )
-def upload_exp_routes_stations(_: int) -> tuple[StationsOption, StationsOption]:
+def upload_exp_routes_callback(_: int) -> tuple[StationsOption, StationsOption]:
     """Колбэк для предзагрузки селекторов с станциями
 
     Returns:
