@@ -131,6 +131,19 @@ class Trains(db.Model):
     train_type: Mapped["TrainTypes"] = relationship(back_populates="trains")
 
 
+class FullRoutes(db.Model):
+    """Модель полных маршрутов следования"""
+
+    __tablename__ = "full_routes"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid1)
+    route: Mapped[str] = mapped_column(unique=True, nullable=False)
+
+    train_travel_times: Mapped[list["TrainTravelTimes"]] = relationship(
+        back_populates="full_route"
+    )
+
+
 class TrainTravelTimes(db.Model):
     """Модель времени поездок на маршрутах"""
 
@@ -142,15 +155,14 @@ class TrainTravelTimes(db.Model):
 
     train_route_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey(
-            "train_routes.id",
+            "full_routes.id",
             ondelete=str(OnDeleteActionType.CASCADE),
         ),
         nullable=False,
+        unique=True,
     )
 
-    train_route: Mapped["TrainRoutes"] = relationship(
-        back_populates="train_travel_times"
-    )
+    full_route: Mapped["FullRoutes"] = relationship(back_populates="train_travel_times")
 
     __table_args__ = (
         CheckConstraint(
@@ -195,9 +207,6 @@ class TrainRoutes(db.Model):
         back_populates="routes_as_end",
         foreign_keys=[end_station_id],
     )
-    train_travel_times: Mapped[list["TrainTravelTimes"]] = relationship(
-        back_populates="train_route"
-    )
 
     __table_args__ = (
         CheckConstraint(
@@ -228,12 +237,3 @@ class Stations(db.Model):
         back_populates="end_station",
         foreign_keys="[TrainRoutes.end_station_id]",
     )
-
-
-class FullRoutes(db.Model):
-    """Модель полных маршрутов следования"""
-
-    __tablename__ = "full_routes"
-
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid1)
-    route: Mapped[str] = mapped_column(unique=True, nullable=False)
