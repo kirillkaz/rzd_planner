@@ -22,6 +22,9 @@ class SaveTravelTimesReturn(TypedDict):
 
     modal_is_open: bool
     upload_trigger: str
+    train_route_id_is_invalid: bool
+    start_date_is_invalid: bool
+    end_date_is_invalid: bool
 
 
 class DelTravelTimesReturn(TypedDict):
@@ -61,6 +64,9 @@ def open_travel_times_modal_callback(_: int) -> bool:
     output=dict(
         modal_is_open=Output("travel-time-modal-id", "is_open"),
         upload_trigger=Output("travel-times-table-upload-trigger", "data"),
+        train_route_id_is_valid=Output("travel-time-route-input-id", "invalid"),
+        start_date_is_valid=Output("travel-time-start-date-id", "invalid"),
+        end_date_is_valid=Output("travel-time-end-date-id", "invalid"),
     ),
     inputs=dict(
         _=Input("travel-time-save-btn-id", "n_clicks"),
@@ -92,15 +98,28 @@ def save_travel_times_callback(
         end_date=end_date,
     )
 
+    train_route_id_invalid = not bool(train_route_id)
+    start_date_invalid = not bool(start_date)
+    end_date_invalid = not bool(end_date)
+
     try:
         TrainTravelTimesDAO().save(dto=dto)
     except SQLAlchemyError as ex:
         print(ex)
-        return SaveTravelTimesReturn(modal_is_open=True, upload_trigger=no_update)
+        return SaveTravelTimesReturn(
+            modal_is_open=True,
+            upload_trigger=no_update,
+            train_route_id_is_valid=train_route_id_invalid,
+            start_date_is_valid=start_date_invalid,
+            end_date_is_valid=end_date_invalid,
+        )
 
     return SaveTravelTimesReturn(
         modal_is_open=False,
         upload_trigger="trigger",
+        train_route_id_is_valid=train_route_id_invalid,
+        start_date_is_valid=start_date_invalid,
+        end_date_is_valid=end_date_invalid,
     )
 
 

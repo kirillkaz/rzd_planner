@@ -1,10 +1,11 @@
 import dash_bootstrap_components as dbc
 from dash_extensions.enrich import dcc, html
 
+from rzd_planner.layouts.components.del_modal_component import render_delete_modal
 from rzd_planner.layouts.components.header import render_user_header
 from rzd_planner.layouts.components.table_component import render_table
 from rzd_planner.layouts.components.table_header import render_table_header
-from rzd_planner.layouts.components.del_modal_component import render_delete_modal
+
 
 def _render_modal() -> dbc.Modal:
     """Функция для отрисовки модального окна"""
@@ -19,6 +20,10 @@ def _render_modal() -> dbc.Modal:
                                 children=[
                                     html.P("Маршрут поездки:"),
                                     dbc.Select(id="travel-time-route-input-id"),
+                                    dbc.FormFeedback(
+                                        "Это поле обязательно для заполнения!",
+                                        type="invalid",
+                                    ),
                                 ],
                                 className="modal-travel-time-block",
                             ),
@@ -30,6 +35,10 @@ def _render_modal() -> dbc.Modal:
                                         step="1",
                                         id="travel-time-start-date-id",
                                     ),
+                                    dbc.FormFeedback(
+                                        "Это поле обязательно для заполнения!",
+                                        type="invalid",
+                                    ),
                                 ],
                                 className="modal-travel-time-input-block",
                             ),
@@ -40,6 +49,10 @@ def _render_modal() -> dbc.Modal:
                                         type="datetime-local",
                                         step="1",
                                         id="travel-time-end-date-id",
+                                    ),
+                                    dbc.FormFeedback(
+                                        "Это поле обязательно для заполнения!",
+                                        type="invalid",
                                     ),
                                 ],
                                 className="modal-travel-time-input-block",

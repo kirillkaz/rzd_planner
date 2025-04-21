@@ -13,6 +13,11 @@ class SaveTrainTypeReturn(TypedDict):
 
     modal_is_open: bool
     upload_trigger: str
+    train_type_is_invalid: bool
+    start_speed_is_invalid: bool
+    end_speed_is_invalid: bool
+    start_distance_is_invalid: bool
+    end_distance_is_invalid: bool
 
 
 class DelTrainTypeReturn(TypedDict):
@@ -37,6 +42,11 @@ def open_modal_callback(_: int) -> bool:
     output=dict(
         modal_is_open=Output("train-type-modal-id", "is_open"),
         upload_trigger=Output("table-type-table-upload-trigger", "data"),
+        train_type_is_invalid=Output("train-type-input-id", "invalid"),
+        start_speed_is_invalid=Output("train-type-start-speed-id", "invalid"),
+        end_speed_is_invalid=Output("train-type-end-speed-id", "invalid"),
+        start_distance_is_invalid=Output("train-type-start-distance-id", "invalid"),
+        end_distance_is_invalid=Output("train-type-end-distance-id", "invalid"),
     ),
     inputs=dict(
         _=Input("train-type-save-btn-id", "n_clicks"),
@@ -64,15 +74,35 @@ def save_train_type_callback(
         max_distance=end_distance,
     )
 
+    train_type_invalid = not bool(train_type)
+    start_speed_invalid = not bool (start_speed)
+    end_speed_invalid = not bool (end_speed)
+    start_distance_invalid = not bool (start_distance)
+    end_distance_invalid = not bool (end_distance)
+
     try:
         TrainTypeDAO().save(dto=dto)
     except SQLAlchemyError as ex:
         print(ex)
-        return SaveTrainTypeReturn(modal_is_open=True, upload_trigger=no_update)
+        print(train_type)
+        return SaveTrainTypeReturn(
+            modal_is_open=True,
+            upload_trigger=no_update,
+            train_type_is_invalid=train_type_invalid,
+            start_speed_is_invalid=start_speed_invalid,
+            end_speed_is_invalid=end_speed_invalid,
+            start_distance_is_invalid=start_distance_invalid,
+            end_distance_is_invalid=end_distance_invalid,
+        )
 
     return SaveTrainTypeReturn(
         modal_is_open=False,
         upload_trigger="trigger",
+        train_type_is_invalid=train_type_invalid,
+        start_speed_is_invalid=start_speed_invalid,
+        end_speed_is_invalid=end_speed_invalid,
+        start_distance_is_invalid=start_distance_invalid,
+        end_distance_is_invalid=end_distance_invalid,
     )
 
 

@@ -13,6 +13,7 @@ class SaveStationReturn(TypedDict):
 
     modal_is_open: bool
     upload_trigger: str
+    station_name_is_invalid: bool
 
 
 class DelStationsReturn(TypedDict):
@@ -37,6 +38,7 @@ def open_modal_stations_callback(_: int) -> bool:
     output=dict(
         modal_is_open=Output("stations-modal-id", "is_open"),
         upload_trigger=Output("stations-table-upload-trigger", "data"),
+        station_name_is_invalid=Output("stations-name-id", "invalid"),
     ),
     inputs=dict(
         _=Input("stations-save-btn-id", "n_clicks"),
@@ -61,15 +63,22 @@ def save_train_type_callback(
         name=station_name,
     )
 
+    station_name_invalid = not bool(station_name)
+
     try:
         StationsDAO().save(dto=dto)
     except SQLAlchemyError as ex:
         print(ex)
-        return SaveStationReturn(modal_is_open=True, upload_trigger=no_update)
+        return SaveStationReturn(
+            modal_is_open=True,
+            upload_trigger=no_update,
+            station_name_is_invalid=station_name_invalid,
+        )
 
     return SaveStationReturn(
         modal_is_open=False,
         upload_trigger="trigger",
+        station_name_is_invalid=station_name_invalid,
     )
 
 

@@ -20,6 +20,10 @@ def _render_modal() -> dbc.Modal:
                                 children=[
                                     html.P("Тип поезда:"),
                                     dbc.Input(id="train-type-input-id"),
+                                    dbc.FormFeedback(
+                                        "Это поле обязательно для заполнения!",
+                                        type="invalid",
+                                    ),
                                 ],
                                 className="modal-train-type-block",
                             ),
@@ -35,6 +39,10 @@ def _render_modal() -> dbc.Modal:
                                                         id="train-type-start-speed-id",
                                                         type="number",
                                                     ),
+                                                    dbc.FormFeedback(
+                                                        "Это поле обязательно для заполнения!",
+                                                        type="invalid",
+                                                    ),
                                                 ],
                                             ),
                                             html.Div(
@@ -43,6 +51,10 @@ def _render_modal() -> dbc.Modal:
                                                     dbc.Input(
                                                         id="train-type-end-speed-id",
                                                         type="number",
+                                                    ),
+                                                    dbc.FormFeedback(
+                                                        "Это поле обязательно для заполнения!",
+                                                        type="invalid",
                                                     ),
                                                 ],
                                             ),
@@ -63,6 +75,10 @@ def _render_modal() -> dbc.Modal:
                                                         id="train-type-start-distance-id",
                                                         type="number",
                                                     ),
+                                                    dbc.FormFeedback(
+                                                        "Это поле обязательно для заполнения!",
+                                                        type="invalid",
+                                                    ),
                                                 ],
                                             ),
                                             html.Div(
@@ -71,6 +87,10 @@ def _render_modal() -> dbc.Modal:
                                                     dbc.Input(
                                                         id="train-type-end-distance-id",
                                                         type="number",
+                                                    ),
+                                                    dbc.FormFeedback(
+                                                        "Это поле обязательно для заполнения!",
+                                                        type="invalid",
                                                     ),
                                                 ],
                                             ),

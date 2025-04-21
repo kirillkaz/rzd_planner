@@ -20,6 +20,10 @@ def _render_modal() -> dbc.Modal:
                                 children=[
                                     html.P("Маршрут:"),
                                     dbc.Select(id="user-routes-select-id"),
+                                    dbc.FormFeedback(
+                                        "Это поле обязательно для заполнения!",
+                                        type="invalid",
+                                    ),
                                 ],
                                 className="modal-user-routes-block",
                             ),

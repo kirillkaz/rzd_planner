@@ -20,6 +20,7 @@ def _render_modal() -> dbc.Modal:
                                 children=[
                                     html.P("Станция отправления:"),
                                     dbc.Select(id="expert-routes-start-station-id"),
+                                    dbc.FormFeedback("Это поле обязательно для заполнения!", type="invalid"),
                                 ],
                                 className="modal-expert-routes-block",
                             ),
@@ -27,6 +28,7 @@ def _render_modal() -> dbc.Modal:
                                 children=[
                                     html.P("Станция прибытия:"),
                                     dbc.Select(id="expert-routes-end-station-id"),
+                                    dbc.FormFeedback("Это поле обязательно для заполнения!", type="invalid"),
                                 ],
                                 className="modal-expert-routes-block",
                             ),
@@ -37,6 +39,7 @@ def _render_modal() -> dbc.Modal:
                                         id="expert-routes-distance-id",
                                         type="number",
                                     ),
+                                    dbc.FormFeedback("Это поле обязательно для заполнения!", type="invalid"),
                                 ],
                                 className="modal-expert-routes-block",
                             ),

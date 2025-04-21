@@ -24,8 +24,8 @@
     flex-direction: row;
     gap: 20px;
 }
-.modal-train-type-speed-block div,
-.modal-train-type-distance-block div{
+.modal-train-type-speed-block > div,
+.modal-train-type-distance-block > div{
     display: flex;
     flex-direction: row;
     gap: 20px;

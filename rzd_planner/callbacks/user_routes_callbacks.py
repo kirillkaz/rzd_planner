@@ -18,6 +18,7 @@ class SaveUserRouteReturn(TypedDict):
 
     modal_is_open: bool
     upload_trigger: str
+    route_is_invalid: bool
 
 
 class DelUserRoutesReturn(TypedDict):
@@ -61,6 +62,7 @@ def open_usr_routes_modal_callback(_: int) -> bool:
     output=dict(
         modal_is_open=Output("user-routes-modal-id", "is_open"),
         upload_trigger=Output("routes-user-table-upload-trigger", "data"),
+        route_is_invalid=Output("user-routes-select-id", "invalid"),
     ),
     inputs=dict(
         _=Input("user-routes-save-btn-id", "n_clicks"),
@@ -84,15 +86,28 @@ def save_usr_route_callback(
         route=route,
     )
 
+    route_invalid = not bool(route)
+    if any([route_invalid]):
+        return SaveUserRouteReturn(
+            modal_is_open=True,
+            upload_trigger=no_update,
+            route_is_invalid=route_invalid,
+        )
+
     try:
         FullRoutesDAO().save(dto=dto)
     except SQLAlchemyError as ex:
         print(ex)
-        return SaveUserRouteReturn(modal_is_open=True, upload_trigger=no_update)
+        return SaveUserRouteReturn(
+            modal_is_open=True,
+            upload_trigger=no_update,
+            route_is_invalid=route_invalid,
+        )
 
     return SaveUserRouteReturn(
         modal_is_open=False,
         upload_trigger="trigger",
+        route_is_invalid=route_invalid,
     )
 
 

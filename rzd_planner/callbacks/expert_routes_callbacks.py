@@ -22,6 +22,9 @@ class SaveExpertRouteReturn(TypedDict):
 
     modal_is_open: bool
     upload_trigger: str
+    start_station_id_is_invalid: bool
+    end_station_id_is_invalid: bool
+    distance_is_invalid: bool
 
 
 class DelExpertRoutesReturn(TypedDict):
@@ -64,6 +67,9 @@ def open_exp_routes_modal_callback(_: int) -> bool:
     output=dict(
         modal_is_open=Output("expert-routes-modal-id", "is_open"),
         upload_trigger=Output("exp-routes-table-upload-trigger", "data"),
+        start_station_id_is_invalid=Output("expert-routes-start-station-id", "invalid"),
+        end_station_id_is_invalid=Output("expert-routes-end-station-id", "invalid"),
+        distance_is_invalid=Output("expert-routes-distance-id", "invalid"),
     ),
     inputs=dict(
         _=Input("expert-routes-save-btn-id", "n_clicks"),
@@ -95,15 +101,28 @@ def save_exp_route_callback(
         distance=distance,
     )
 
+    start_station_id_invalid = not bool(start_station_id)
+    end_station_id_invalid = not bool(end_station_id)
+    distance_invalid = not bool(distance)
+
     try:
         ExpertRoutesDAO().save(dto=dto)
     except SQLAlchemyError as ex:
         print(ex)
-        return SaveExpertRouteReturn(modal_is_open=True, upload_trigger=no_update)
+        return SaveExpertRouteReturn(
+            modal_is_open=True,
+            upload_trigger=no_update,
+            start_station_id_is_invalid=start_station_id_invalid,
+            end_station_id_is_invalid=end_station_id_invalid,
+            distance_is_invalid=distance_invalid,
+        )
 
     return SaveExpertRouteReturn(
         modal_is_open=False,
         upload_trigger="trigger",
+        start_station_id_is_invalid=start_station_id_invalid,
+        end_station_id_is_invalid=end_station_id_invalid,
+        distance_is_invalid=distance_invalid,
     )
 
 

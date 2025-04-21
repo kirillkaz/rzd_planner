@@ -11,7 +11,6 @@ from rzd_planner.services.mappers import (
     TrainTypeMapper,
     TrainTypeOption,
 )
-from rzd_planner.services.train_routes_service import TrainRoutesService
 
 
 class SaveTrainReturn(TypedDict):
@@ -19,6 +18,8 @@ class SaveTrainReturn(TypedDict):
 
     modal_is_open: bool
     upload_trigger: str
+    train_number_is_invalid: bool
+    train_type_uuid_is_invalid: bool
 
 
 class DelTrainReturn(TypedDict):
@@ -27,6 +28,7 @@ class DelTrainReturn(TypedDict):
     trigger: str
     selected_rows: list[int]
     is_open: bool
+
 
 @app.callback(
     Output("train-type-select-id", "options"),
@@ -57,6 +59,8 @@ def open_train_modal_callback(_: int) -> bool:
     output=dict(
         modal_is_open=Output("train-modal-id", "is_open"),
         upload_trigger=Output("trains-table-upload-trigger", "data"),
+        train_number_is_invalid=Output("train-input-id", "invalid"),
+        train_type_uuid_is_invalid=Output("train-type-select-id", "invalid"),
     ),
     inputs=dict(
         _=Input("train-save-btn-id", "n_clicks"),
@@ -83,16 +87,33 @@ def save_train_callback(
         train_number=train_number,
         train_type_id=train_type_uuid,
     )
+    train_number_invalid = not bool(train_number)
+    train_type_uuid_invalid = not bool(train_type_uuid)
+
+    if any([train_number_invalid, train_type_uuid_invalid]):
+        return SaveTrainReturn(
+            modal_is_open=True,
+            upload_trigger=no_update,
+            train_number_is_invalid=train_number_invalid,
+            train_type_uuid_is_invalid=train_type_uuid_invalid,
+        )
 
     try:
         TrainDAO().save(dto=dto)
     except SQLAlchemyError as ex:
         print(ex)
-        return SaveTrainReturn(modal_is_open=True, upload_trigger=no_update)
+        return SaveTrainReturn(
+            modal_is_open=True,
+            upload_trigger=no_update,
+            train_number_is_invalid=train_number_invalid,
+            train_type_uuid_is_invalid=train_type_uuid_invalid,
+        )
 
     return SaveTrainReturn(
         modal_is_open=False,
         upload_trigger="trigger",
+        train_number_is_invalid=train_number_invalid,
+        train_type_uuid_is_invalid=train_type_uuid_invalid,
     )
 
 
@@ -106,6 +127,7 @@ def load_exp_route_to_table(_: int) -> list[TrainsTableType]:
     db_data = TrainDAO().get_all()
     mapped_data = TrainsMapper().model_to_table(db_data)
     return mapped_data
+
 
 @app.callback(
     Output("trains-delete-modal-id", "is_open"),

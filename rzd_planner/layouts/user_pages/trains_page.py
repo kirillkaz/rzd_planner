@@ -20,6 +20,10 @@ def _render_modal() -> dbc.Modal:
                                 children=[
                                     html.P("Номер поезда:"),
                                     dbc.Input(id="train-input-id"),
+                                    dbc.FormFeedback(
+                                        "Это поле обязательно для заполнения!",
+                                        type="invalid",
+                                    ),
                                 ],
                                 className="modal-train-block",
                             ),
@@ -27,6 +31,10 @@ def _render_modal() -> dbc.Modal:
                                 children=[
                                     html.P("Тип поезда:"),
                                     dbc.Select(id="train-type-select-id"),
+                                    dbc.FormFeedback(
+                                        "Это поле обязательно для заполнения!",
+                                        type="invalid",
+                                    ),
                                 ],
                                 className="modal-train-type-select-block",
                             ),

@@ -20,6 +20,7 @@ def _render_modal() -> dbc.Modal:
                             dbc.Input(
                                 id="stations-name-id",
                             ),
+                            dbc.FormFeedback("Это поле обязательно для заполнения!", type="invalid")
                         ],
                         className="stations-name-block",
                     ),
