@@ -1,5 +1,6 @@
 from . import (
     auth_callbacks,
+    check_knowledge_callbacks,
     expert_routes_callbacks,
     main_callbacks,
     stations_callbacks,
