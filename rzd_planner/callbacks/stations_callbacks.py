@@ -58,7 +58,6 @@ def save_train_type_callback(
     Returns:
         SaveStationReturn: Структура возвращаемого типа для колбэка
     """
-    print(station_name)
     dto = StationsDTO(
         name=station_name,
     )

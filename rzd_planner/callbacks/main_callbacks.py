@@ -37,7 +37,6 @@ def display_page(pathname: str) -> tuple[html.Div, str]:
     Returns:
         tuple[html.Div, str]: содержимое страницы + путь к странице
     """
-    print(ctx.triggered)
     expert_pages = {
         "/train_type": render_train_types_page,
         "/stations": render_stations_page,
