@@ -5,7 +5,6 @@ from typing import Self
 import networkx as nx
 
 from rzd_planner.models import TrainRoutes
-from rzd_planner.services.dao.expert_routes_dao import ExpertRoutesDAO
 
 
 class TrainRoutesService:
