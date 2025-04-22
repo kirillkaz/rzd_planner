@@ -1,4 +1,4 @@
-from dash_extensions.enrich import html
+from dash_extensions.enrich import html, dcc
 
 from rzd_planner.layouts.components.header import render_expert_header
 from rzd_planner.layouts.components.table_component import render_table
@@ -8,7 +8,7 @@ from rzd_planner.layouts.components.table_header import render_table_header
 def render_check_knowledge_page() -> html.Div:
     """Функция для отрисовки страницы проверки базы знаний"""
     _cols_defs = [
-        {"name": "", "id": "knowledge_type"},
+        {"name": "", "id": "knoledge_name"},
         {"name": "Описание", "id": "description"},
     ]
 
@@ -20,7 +20,7 @@ def render_check_knowledge_page() -> html.Div:
                     render_table_header(
                         left_childrens=[
                             html.Div(
-                                "Таблица маршрутов",
+                                "Таблица базы знаний",
                                 className="table-header-title",
                             )
                         ],
@@ -34,5 +34,6 @@ def render_check_knowledge_page() -> html.Div:
                 ],
                 className="table-block",
             ),
+            dcc.Store(id="check-knowledge-table-upload-trigger", storage_type="memory"),
         ],
     )
