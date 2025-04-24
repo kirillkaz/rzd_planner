@@ -18,11 +18,41 @@ def _render_modal() -> dbc.Modal:
                         children=[
                             html.Div(
                                 children=[
-                                    html.P("Маршрут:"),
-                                    dbc.Select(id="user-routes-select-id"),
-                                    dbc.FormFeedback(
-                                        "Это поле обязательно для заполнения!",
-                                        type="invalid",
+                                    html.Div(
+                                        children=[
+                                            html.P("Маршрут:"),
+                                            dbc.Select(id="user-routes-select-id"),
+                                            dbc.FormFeedback(
+                                                "Это поле обязательно для заполнения!",
+                                                type="invalid",
+                                            ),
+                                        ]
+                                    ),
+                                    html.Div(
+                                        children=[
+                                            html.P("Номер подходящего поезда:"),
+                                            dbc.Select(
+                                                id="user-routes-select-train-id"
+                                            ),
+                                            dbc.FormFeedback(
+                                                "Это поле обязательно для заполнения!",
+                                                type="invalid",
+                                            ),
+                                        ]
+                                    ),
+                                    html.Div(
+                                        children=[
+                                            html.P("Дальность поездки:"),
+                                            dbc.Input(
+                                                id="user-routes-distance-id",
+                                                readonly=True,
+                                                type="number",
+                                            ),
+                                            dbc.FormFeedback(
+                                                "Нет походящих поездов на данную дистанцию!",
+                                                type="invalid",
+                                            ),
+                                        ]
                                     ),
                                 ],
                                 className="modal-user-routes-block",
@@ -52,7 +82,9 @@ def _render_modal() -> dbc.Modal:
 def render_user_routes_page() -> html.Div:
     """Функция для отрисовки страницы маршрутов станций"""
     _cols_defs = [
+        {"name": "Номер поезда", "id": "train"},
         {"name": "Маршрут поездки", "id": "route"},
+        {"name": "Дальность поездки", "id": "distance"},
     ]
 
     return html.Div(
