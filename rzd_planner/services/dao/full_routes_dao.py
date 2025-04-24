@@ -1,6 +1,8 @@
 from dataclasses import asdict, dataclass
 from typing import Self
 
+from sqlalchemy.orm import joinedload
+
 from rzd_planner.models import FullRoutes, db
 
 
@@ -9,6 +11,8 @@ class FullRoutesDTO:
     """DTO полных маршрутов"""
 
     route: str
+    train_id: str
+    distance: float
 
 
 class FullRoutesDAO:
@@ -32,7 +36,9 @@ class FullRoutesDAO:
             list[FullRoutes]: типы поездов
         """
         with db.session() as session:
-            models = session.query(FullRoutes).all()
+            models = (
+                session.query(FullRoutes).options(joinedload(FullRoutes.trains)).all()
+            )
 
         return models
 
