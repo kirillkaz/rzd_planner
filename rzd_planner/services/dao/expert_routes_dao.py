@@ -1,9 +1,10 @@
 from dataclasses import asdict, dataclass
 from typing import Self
 
+from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
 
-from rzd_planner.models import TrainRoutes, db
+from rzd_planner.models import Stations, TrainRoutes, db
 
 
 @dataclass
@@ -50,6 +51,34 @@ class ExpertRoutesDAO:
             )
 
         return models
+
+    def get_route_by_start_end(self: Self, start: str, end: str) -> TrainRoutes:
+        """Метод для получения маршрута по названиям начальной и конечной станций
+
+        Args:
+            start (str): Название начальной станции
+            end (str): Название конечной станции
+        """
+
+        # костыльное решение :(
+        with db.session() as session:
+            start_station = (
+                session.query(Stations).filter(Stations.name == start).first()
+            )
+            end_station = session.query(Stations).filter(Stations.name == end).first()
+
+            train_route = (
+                session.query(TrainRoutes)
+                .filter(
+                    and_(
+                        TrainRoutes.start_station_id == start_station.id,
+                        TrainRoutes.end_station_id == end_station.id,
+                    )
+                )
+                .first()
+            )
+
+            return train_route
 
     def delete(self: Self, uuid_lst: list[str]) -> None:
         """Метод для удаления маршрутов поездов
