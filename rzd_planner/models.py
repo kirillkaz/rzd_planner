@@ -129,6 +129,7 @@ class Trains(db.Model):
     )
 
     train_type: Mapped["TrainTypes"] = relationship(back_populates="trains")
+    full_routes: Mapped[list["FullRoutes"]] = relationship(back_populates="trains")
 
 
 class FullRoutes(db.Model):
@@ -138,7 +139,16 @@ class FullRoutes(db.Model):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid1)
     route: Mapped[str] = mapped_column(unique=True, nullable=False)
+    distance: Mapped[float] = mapped_column(nullable=False)
+    train_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey(
+            "trains.id",
+            ondelete=str(OnDeleteActionType.CASCADE),
+        ),
+        nullable=False,
+    )
 
+    trains: Mapped[list["Trains"]] = relationship(back_populates="full_routes")
     train_travel_times: Mapped[list["TrainTravelTimes"]] = relationship(
         back_populates="full_route"
     )
