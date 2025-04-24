@@ -10,6 +10,8 @@ class FullRoutesTableType(TypedDict):
 
     id: str
     route: str
+    train: str
+    distance: float
 
 
 class FullRouteOption(TypedDict):
@@ -38,6 +40,8 @@ class FullRoutesMapper:
             elem = {
                 "id": str(obj.id),
                 "route": obj.route,
+                "train": obj.trains.train_number,
+                "distance": obj.distance,
             }
             result_arr.append(cast(FullRoutesTableType, elem))
 
