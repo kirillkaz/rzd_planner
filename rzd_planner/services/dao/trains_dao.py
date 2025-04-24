@@ -1,9 +1,10 @@
 from dataclasses import asdict, dataclass
 from typing import Self
 
+from sqlalchemy import and_
 from sqlalchemy.orm import joinedload
 
-from rzd_planner.models import Trains, db
+from rzd_planner.models import Trains, TrainTypes, db, FullRoutes
 
 
 @dataclass
@@ -46,7 +47,34 @@ class TrainDAO:
             )
 
         return models
-    
+
+    def get_all_free_by_distance_not(self: Self, distance: float) -> list[Trains]:
+        """Метод для получения всех свободных поездов, которые могут ездить на соотв. дистанцию
+
+        Args:
+            distance (float): дистанция поездки
+
+        Returns:
+            list[Trains]: список подходящих поездов
+        """
+
+        with db.session() as session:
+            models = (
+                session.query(Trains)
+                .join(TrainTypes, Trains.train_type_id == TrainTypes.id)
+                .outerjoin(FullRoutes, FullRoutes.train_id == Trains.id)
+                .filter(
+                    and_(
+                        TrainTypes.min_distance <= distance,
+                        TrainTypes.max_distance >= distance,
+                        FullRoutes.id == None,
+                    )
+                )
+                .all()
+            )
+
+        return models
+
     def delete(self: Self, uuid_lst: list[str]) -> None:
         """Метод для удаления поездов
 
