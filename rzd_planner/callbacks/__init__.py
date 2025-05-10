@@ -3,6 +3,7 @@ from . import (
     check_knowledge_callbacks,
     expert_routes_callbacks,
     main_callbacks,
+    planning_page_callbacks,
     stations_callbacks,
     train_callbacks,
     train_travel_times_callbacks,

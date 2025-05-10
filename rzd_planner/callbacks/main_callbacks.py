@@ -19,6 +19,7 @@ from rzd_planner.layouts.user_pages import (
     render_trains_page,
     render_travel_times_page,
     render_user_routes_page,
+    render_planning_page,
 )
 from rzd_planner.services.dao.users_dao import UserDAO
 
@@ -48,6 +49,7 @@ def display_page(pathname: str) -> tuple[html.Div, str]:
         "/trains": render_trains_page,
         "/travel_times": render_travel_times_page,
         "/routes_user": render_user_routes_page,
+        "/planning": render_planning_page,
     }
 
     if pathname is None:
