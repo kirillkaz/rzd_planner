@@ -160,8 +160,7 @@ class TrainTravelTimes(db.Model):
     __tablename__ = "train_travel_times"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid1)
-    start_date: Mapped[datetime] = mapped_column(nullable=False)
-    end_date: Mapped[datetime] = mapped_column(nullable=False)
+    total_time: Mapped[int] = mapped_column(nullable=False)
 
     train_route_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey(
@@ -176,12 +175,8 @@ class TrainTravelTimes(db.Model):
 
     __table_args__ = (
         CheckConstraint(
-            "start_date != end_date",
+            "total_time > 0",
             name="dates_not_equal_constraint",
-        ),
-        CheckConstraint(
-            "start_date < end_date",
-            name="end_date_higher_start_date_constraint",
         ),
     )
 
