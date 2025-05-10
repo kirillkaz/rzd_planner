@@ -3,7 +3,7 @@ from typing import Self
 
 from sqlalchemy.orm import joinedload
 
-from rzd_planner.models import FullRoutes, db
+from rzd_planner.models import FullRoutes, TrainTravelTimes, db
 
 
 @dataclass
@@ -33,11 +33,31 @@ class FullRoutesDAO:
         """Метод для извлечения всех полных маршрутов из БД
 
         Returns:
-            list[FullRoutes]: типы поездов
+            list[FullRoutes]: маршруты поездки
         """
         with db.session() as session:
             models = (
                 session.query(FullRoutes).options(joinedload(FullRoutes.trains)).all()
+            )
+
+        return models
+
+    def get_all_not_in_times(self: Self) -> list[FullRoutes]:
+        """Метод для извлечения всех полных маршрутов из БД для которых нет времени поездки
+
+        Returns:
+            list[FullRoutes]: маршруты поездки
+        """
+        with db.session() as session:
+            models = (
+                session.query(FullRoutes)
+                .outerjoin(
+                    TrainTravelTimes,
+                    TrainTravelTimes.train_route_id == FullRoutes.id,
+                )
+                .filter(TrainTravelTimes.id.is_(None))
+                .options(joinedload(FullRoutes.trains))
+                .all()
             )
 
         return models
