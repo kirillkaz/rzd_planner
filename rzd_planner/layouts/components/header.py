@@ -23,5 +23,6 @@ def render_user_header() -> html.Div:
             dbc.NavItem(dbc.NavLink("Поезда", href="/trains", active=True)),
             dbc.NavItem(dbc.NavLink("Маршруты станции", href="/routes_user")),
             dbc.NavItem(dbc.NavLink("Время поездки", href="/travel_times")),
+            dbc.NavItem(dbc.NavLink("Формирование расписания поездок", href="/planning")),
         ],
     )
