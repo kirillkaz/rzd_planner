@@ -5,13 +5,13 @@ from sqlalchemy.orm import joinedload
 
 from rzd_planner.models import TrainTravelTimes, db
 
+type TotalSeconds = int
 
 @dataclass
 class TrainTravelTimesDTO:
     """DTO времени поездок"""
 
-    start_date: str
-    end_date: str
+    total_time: TotalSeconds
     train_route_id: str
 
 
