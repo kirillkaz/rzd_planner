@@ -19,6 +19,7 @@ psycopg2-binary = "^2.9.10"
 passlib = "^1.7.4"
 flask-login = "^0.6.3"
 networkx = "^3.4.2"
+ipython = "^9.2.0"
 
 
 [build-system]
