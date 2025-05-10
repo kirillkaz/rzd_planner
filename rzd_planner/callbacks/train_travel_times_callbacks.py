@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import TypedDict
 
 from dash_extensions.enrich import Input, Output, State, no_update
@@ -23,8 +24,9 @@ class SaveTravelTimesReturn(TypedDict):
     modal_is_open: bool
     upload_trigger: str
     train_route_id_is_invalid: bool
-    start_date_is_invalid: bool
-    end_date_is_invalid: bool
+    days_is_valid: bool
+    hours_is_valid: bool
+    minutes_is_valid: bool
 
 
 class DelTravelTimesReturn(TypedDict):
@@ -37,17 +39,27 @@ class DelTravelTimesReturn(TypedDict):
 
 @app.callback(
     Output("travel-time-route-input-id", "options"),
+    Output("travel-time-route-input-id", "value"),
+    Output("travel-time-route-input-id", "label"),
     Input("travel-times-add-btn-id", "n_clicks"),
     prevent_initial_call=True,
 )
-def upload_travel_times_callback(_: int) -> list[FullRouteOption]:
+def upload_travel_times_callback(_: int) -> tuple[list[FullRouteOption], str, str]:
     """Колбэк для предзагрузки селектора с маршрутами поездок
 
     Returns:
-        list[FullRouteOption]: маршруты поездок
+        tuple[list[FullRouteOption], str, str]: маршруты поездок + значение и отображение 1й строки
     """
-    objs = FullRoutesDAO().get_all()
-    return FullRoutesMapper().model_to_options(objects=objs)
+    objs = FullRoutesDAO().get_all_not_in_times()
+    mapped_objs = FullRoutesMapper().model_to_options(objects=objs)
+
+    if objs:
+        return (
+            mapped_objs,
+            mapped_objs[0]["value"],
+            mapped_objs[0]["label"],
+        )
+    return mapped_objs, no_update, no_update
 
 
 @app.callback(
@@ -65,42 +77,59 @@ def open_travel_times_modal_callback(_: int) -> bool:
         modal_is_open=Output("travel-time-modal-id", "is_open"),
         upload_trigger=Output("travel-times-table-upload-trigger", "data"),
         train_route_id_is_valid=Output("travel-time-route-input-id", "invalid"),
-        start_date_is_valid=Output("travel-time-start-date-id", "invalid"),
-        end_date_is_valid=Output("travel-time-end-date-id", "invalid"),
+        days_is_valid=Output("travel-time-days-id", "invalid"),
+        hours_is_valid=Output("travel-time-hours-id", "invalid"),
+        minutes_is_valid=Output("travel-time-minutes-id", "invalid"),
     ),
     inputs=dict(
         _=Input("travel-time-save-btn-id", "n_clicks"),
         train_route_id=State("travel-time-route-input-id", "value"),
-        start_date=State("travel-time-start-date-id", "value"),
-        end_date=State("travel-time-end-date-id", "value"),
+        days=State("travel-time-days-id", "value"),
+        hours=State("travel-time-hours-id", "value"),
+        minutes=State("travel-time-minutes-id", "value"),
     ),
     prevent_initial_call=True,
 )
 def save_travel_times_callback(
     _: int,
     train_route_id: str,
-    start_date: str,
-    end_date: str,
+    days: int,
+    hours: int,
+    minutes: int,
 ) -> SaveTravelTimesReturn:
     """Колбэк для сохранения маршрута
 
     Args:
         train_route_id (str): uuid полного маршрута поездки
-        start_date (str): время отправления поезда
-        disend_datetance (str): время прибытия поезда
+        days (int): Количество дней в пути
+        hours (int): Количество часов в пути
+        minutes (int): Количество минут в пути
 
     Returns:
         SaveTravelTimesReturn: Структура возвращаемого типа для колбэка
     """
+    print(train_route_id)
+    train_route_id_invalid = not bool(train_route_id)
+    days_invalid = days is None or days < 0
+    hours_invalid = hours is None or hours < 0
+    minutes_invalid = minutes is None or minutes < 0
+
+    if any([train_route_id_invalid, days_invalid, hours_invalid, minutes_invalid]):
+        return SaveTravelTimesReturn(
+            modal_is_open=True,
+            upload_trigger=no_update,
+            train_route_id_is_valid=train_route_id_invalid,
+            days_is_valid=days_invalid,
+            hours_is_valid=hours_invalid,
+            minutes_is_valid=minutes_invalid,
+        )
+
+    total_time = timedelta(days=days, hours=hours, minutes=minutes).total_seconds()
+
     dto = TrainTravelTimesDTO(
         train_route_id=train_route_id,
-        start_date=start_date,
-        end_date=end_date,
+        total_time=total_time,
     )
-
-    train_route_id_invalid = not bool(train_route_id)
-    start_date_invalid = not bool(start_date)
-    end_date_invalid = not bool(end_date)
 
     try:
         TrainTravelTimesDAO().save(dto=dto)
@@ -110,16 +139,18 @@ def save_travel_times_callback(
             modal_is_open=True,
             upload_trigger=no_update,
             train_route_id_is_valid=train_route_id_invalid,
-            start_date_is_valid=start_date_invalid,
-            end_date_is_valid=end_date_invalid,
+            days_is_valid=days_invalid,
+            hours_is_valid=hours_invalid,
+            minutes_is_valid=minutes_invalid,
         )
 
     return SaveTravelTimesReturn(
         modal_is_open=False,
         upload_trigger="trigger",
         train_route_id_is_valid=train_route_id_invalid,
-        start_date_is_valid=start_date_invalid,
-        end_date_is_valid=end_date_invalid,
+        days_is_valid=days_invalid,
+        hours_is_valid=hours_invalid,
+        minutes_is_valid=minutes_invalid,
     )
 
 
