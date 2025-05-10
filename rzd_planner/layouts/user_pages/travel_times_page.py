@@ -29,30 +29,50 @@ def _render_modal() -> dbc.Modal:
                             ),
                             html.Div(
                                 children=[
-                                    html.P("Время начала поездки:"),
-                                    dcc.Input(
-                                        type="datetime-local",
-                                        step="1",
-                                        id="travel-time-start-date-id",
-                                    ),
-                                    dbc.FormFeedback(
-                                        "Это поле обязательно для заполнения!",
-                                        type="invalid",
-                                    ),
-                                ],
-                                className="modal-travel-time-input-block",
-                            ),
-                            html.Div(
-                                children=[
-                                    html.P("Время конца поездки:"),
-                                    dcc.Input(
-                                        type="datetime-local",
-                                        step="1",
-                                        id="travel-time-end-date-id",
-                                    ),
-                                    dbc.FormFeedback(
-                                        "Это поле обязательно для заполнения!",
-                                        type="invalid",
+                                    html.P("Время поездки:"),
+                                    html.Div(
+                                        children=[
+                                            html.Div(
+                                                children=[
+                                                    html.P("Дни:"),
+                                                    dbc.Input(
+                                                        type="number",
+                                                        id="travel-time-days-id",
+                                                    ),
+                                                    dbc.FormFeedback(
+                                                        "Это поле обязательно для заполнения. Значение должно быть больше нуля.",
+                                                        type="invalid",
+                                                    ),
+                                                ]
+                                            ),
+                                            html.Div(
+                                                children=[
+                                                    html.P("Часы:"),
+                                                    dbc.Input(
+                                                        type="number",
+                                                        id="travel-time-hours-id",
+                                                    ),
+                                                    dbc.FormFeedback(
+                                                        "Это поле обязательно для заполнения. Значение должно быть больше нуля.",
+                                                        type="invalid",
+                                                    ),
+                                                ]
+                                            ),
+                                            html.Div(
+                                                children=[
+                                                    html.P("Минуты:"),
+                                                    dbc.Input(
+                                                        type="number",
+                                                        id="travel-time-minutes-id",
+                                                    ),
+                                                    dbc.FormFeedback(
+                                                        "Это поле обязательно для заполнения. Значение должно быть больше нуля.",
+                                                        type="invalid",
+                                                    ),
+                                                ]
+                                            ),
+                                        ],
+                                        className="modal-travel-total-time-block",
                                     ),
                                 ],
                                 className="modal-travel-time-input-block",
@@ -83,8 +103,7 @@ def render_travel_times_page() -> html.Div:
     """Функция для отрисовки страницы времени поездки"""
     _cols_defs = [
         {"name": "Маршрут поездки", "id": "train_route"},
-        {"name": "Время начала поездки", "id": "start_date"},
-        {"name": "Время конца поездки", "id": "end_date"},
+        {"name": "Время поездки", "id": "total_time"},
     ]
 
     return html.Div(

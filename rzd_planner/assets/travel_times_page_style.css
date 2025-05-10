@@ -1,0 +1,24 @@
+.modal-travel-time-input-block{
+    margin-top: 20px;
+}
+
+.modal-travel-total-time-block{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.modal-travel-total-time-block > div{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.modal-travel-total-time-block > div > p{
+    width: 60px;
+}
+
+.modal-travel-total-time-block > div > input{
+    width: 200px;
+}
